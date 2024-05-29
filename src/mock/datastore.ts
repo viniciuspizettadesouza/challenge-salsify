@@ -1,33 +1,4 @@
-interface PropertyValue {
-  property_id: number;
-  value: string | number;
-}
-
-interface Product {
-  id: number;
-  property_values: PropertyValue[];
-}
-
-interface Property {
-  id: number;
-  name: string;
-  type: 'string' | 'number' | 'enumerated';
-  values?: string[];
-}
-
-interface Operator {
-  text: string;
-  id: string;
-}
-
-interface Datastore {
-  getProducts: () => Product[];
-  getProperties: () => Property[];
-  getOperators: () => Operator[];
-  products: Product[];
-  properties: Property[];
-  operators: Operator[];
-}
+import { Datastore } from '../interfaces';
 
 const datastore: Datastore = {
   getProducts: function() {
