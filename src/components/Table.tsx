@@ -23,14 +23,6 @@ const Table: React.FC = () => {
         setSelectedPropertyValue(null);
     };
 
-    const handleOperatorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedOperatorId(event.target.value);
-    };
-
-    const handlePropertyValueChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedPropertyValue(event.target.value);
-    };
-
     const getPropertyValues = () => {
         if (selectedPropertyId === null) return [];
         const selectedProperty = properties.find(property => property.id === selectedPropertyId);
@@ -45,8 +37,7 @@ const Table: React.FC = () => {
             });
         });
 
-        const valuesArray = Array.from(values);
-        return valuesArray;
+        return Array.from(values);
     };
 
     const filteredProducts = products.filter(product => {
@@ -91,14 +82,14 @@ const Table: React.FC = () => {
             <OperatorSelect
                 selectedOperatorId={selectedOperatorId}
                 operators={operators}
-                handleOperatorChange={handleOperatorChange}
+                setSelectedOperatorId={setSelectedOperatorId}
             />
 
             {selectedPropertyId !== null && (
                 <PropertyValueSelect
                     selectedPropertyValue={selectedPropertyValue}
                     getPropertyValues={getPropertyValues}
-                    handlePropertyValueChange={handlePropertyValueChange}
+                    setSelectedPropertyValue={setSelectedPropertyValue}
                 />
             )}
 
