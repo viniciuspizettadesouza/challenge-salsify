@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TableHeader from './TableHeader';
 import TableCell from './TableCell';
+import PropertySelect from './PropertySelect';
+import OperatorSelect from './OperatorSelect';
+import PropertyValueSelect from './PropertyValueSelect';
 import datastore from '../datastore';
 import { Product, Property, Operator } from '../interfaces';
 
@@ -28,22 +31,6 @@ const Table: React.FC = () => {
         setSelectedPropertyValue(event.target.value);
     };
 
-    const renderPropertyOptions = () => {
-        return properties.map(property => (
-            <option key={property.id} value={property.id}>
-                {property.name}
-            </option>
-        ));
-    };
-
-    const renderOperatorOptions = () => {
-        return operators.map(operator => (
-            <option key={operator.id} value={operator.id}>
-                {operator.text}
-            </option>
-        ));
-    };
-
     const getPropertyValues = () => {
         if (selectedPropertyId === null) return [];
         const selectedProperty = properties.find(property => property.id === selectedPropertyId);
@@ -59,8 +46,6 @@ const Table: React.FC = () => {
         });
 
         const valuesArray = Array.from(values);
-        console.log(`Values for selected property (ID: ${selectedPropertyId}):`, valuesArray);
-
         return valuesArray;
     };
 
@@ -97,26 +82,26 @@ const Table: React.FC = () => {
 
     return (
         <div>
-            <select value={selectedPropertyId !== null ? selectedPropertyId : ''} onChange={handlePropertyChange}>
-                <option value="">Select Property</option>
-                {renderPropertyOptions()}
-            </select>
+            <PropertySelect
+                selectedPropertyId={selectedPropertyId}
+                properties={properties}
+                handlePropertyChange={handlePropertyChange}
+            />
 
-            <select value={selectedOperatorId !== null ? selectedOperatorId : ''} onChange={handleOperatorChange}>
-                <option value="">Select Operator</option>
-                {renderOperatorOptions()}
-            </select>
+            <OperatorSelect
+                selectedOperatorId={selectedOperatorId}
+                operators={operators}
+                handleOperatorChange={handleOperatorChange}
+            />
 
             {selectedPropertyId !== null && (
-                <select value={selectedPropertyValue !== null ? selectedPropertyValue : ''} onChange={handlePropertyValueChange}>
-                    <option value="">Select Value</option>
-                    {getPropertyValues().map(value => (
-                        <option key={value} value={value}>
-                            {value}
-                        </option>
-                    ))}
-                </select>
+                <PropertyValueSelect
+                    selectedPropertyValue={selectedPropertyValue}
+                    getPropertyValues={getPropertyValues}
+                    handlePropertyValueChange={handlePropertyValueChange}
+                />
             )}
+
 
             {filteredProducts.length > 0 ? (
                 <table>

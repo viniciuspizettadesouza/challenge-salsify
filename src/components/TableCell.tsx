@@ -1,4 +1,3 @@
-import React from 'react';
 import { Product, Property } from '../interfaces';
 
 interface TableCellProps {
