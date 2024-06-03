@@ -41,7 +41,7 @@ const PropertyValueSelect: React.FC<PropertyValueSelectProps> = ({
           {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
       ) : (
-        <select value={selectedPropertyValue || ""} onChange={handleChange}>
+        <select value={selectedPropertyValue || ""} onChange={handleChange} aria-label="Property Value Select">
           <option value="">Select a value</option>
           {propertyValues.map((value) => (
             <option key={value} value={value}>

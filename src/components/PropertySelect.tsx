@@ -25,6 +25,7 @@ const PropertySelect: React.FC<PropertySelectProps> = ({
     <select
       value={selectedPropertyId !== null ? selectedPropertyId : ""}
       onChange={(e) => handlePropertyChange(parseInt(e.target.value))}
+      aria-label="Property Select"
     >
       <option value="">Select Property</option>
       {renderPropertyOptions()}
