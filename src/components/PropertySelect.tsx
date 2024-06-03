@@ -1,12 +1,14 @@
-import { Property } from '../interfaces';
+import { Filter, Property } from '../interfaces';
 
 interface PropertySelectProps {
-    selectedPropertyId: number | null;
+    filter: Filter;
     properties: Property[];
     handlePropertyChange: (selectedPropertyId: number | null) => void;
 }
 
-const PropertySelect: React.FC<PropertySelectProps> = ({ selectedPropertyId, properties, handlePropertyChange }) => {
+const PropertySelect: React.FC<PropertySelectProps> = ({ filter, properties, handlePropertyChange }) => {
+    const { selectedPropertyId } = filter
+
     const renderPropertyOptions = () => {
         return properties.map(property => (
             <option key={property.id} value={property.id}>

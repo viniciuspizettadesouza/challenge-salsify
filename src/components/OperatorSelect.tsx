@@ -1,12 +1,14 @@
-import { Operator } from '../interfaces';
+import { Filter, Operator } from '../interfaces';
 
 interface OperatorSelectProps {
-    selectedOperatorId: string | null;
+    filter: Filter;
     operators: Operator[];
     setSelectedOperatorId: (value: string | null) => void;
 }
 
-const OperatorSelect: React.FC<OperatorSelectProps> = ({ selectedOperatorId, operators, setSelectedOperatorId }) => {
+const OperatorSelect: React.FC<OperatorSelectProps> = ({ filter, operators, setSelectedOperatorId }) => {
+    const { selectedOperatorId } = filter
+
     const renderOperatorOptions = () => {
         return operators.map(operator => (
             <option key={operator.id} value={operator.id}>

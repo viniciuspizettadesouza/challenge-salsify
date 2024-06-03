@@ -5,13 +5,7 @@ import PropertySelect from './PropertySelect';
 import OperatorSelect from './OperatorSelect';
 import PropertyValueSelect from './PropertyValueSelect';
 import datastore from '../datastore';
-import { Product, Property, Operator } from '../interfaces';
-
-interface Filter {
-    selectedPropertyId: number | null;
-    selectedOperatorId: string | null;
-    selectedPropertyValue: string | null;
-}
+import { Filter, Product, Property, Operator } from '../interfaces';
 
 const Table: React.FC = () => {
     const [filter, setFilter] = useState<Filter>({
@@ -84,21 +78,20 @@ const Table: React.FC = () => {
     return (
         <div>
             <PropertySelect
-                selectedPropertyId={filter.selectedPropertyId}
+                filter={filter}
                 properties={properties}
                 handlePropertyChange={handlePropertyChange}
             />
             <OperatorSelect
-                selectedOperatorId={filter.selectedOperatorId}
+                filter={filter}
                 operators={operators}
                 setSelectedOperatorId={handleOperatorChange}
             />
             {filter.selectedPropertyId !== null && (
                 <PropertyValueSelect
-                    selectedPropertyValue={filter.selectedPropertyValue}
+                    filter={filter}
                     getPropertyValues={getPropertyValues}
                     setSelectedPropertyValue={handlePropertyValueChange}
-                    selectedOperatorId={filter.selectedOperatorId}
                 />
             )}
             <button onClick={handleClear}>Clear</button>

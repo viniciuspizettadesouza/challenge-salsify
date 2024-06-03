@@ -1,20 +1,20 @@
 import { useState } from 'react';
+import { Filter } from '../interfaces';
 
 interface PropertyValueSelectProps {
-    selectedPropertyValue: string | null;
+    filter: Filter;
     getPropertyValues: () => string[];
     setSelectedPropertyValue: (value: string | null) => void;
-    selectedOperatorId: string | null;
 }
 
 const PropertyValueSelect: React.FC<PropertyValueSelectProps> = ({
-    selectedPropertyValue,
+    filter,
     getPropertyValues,
-    setSelectedPropertyValue,
-    selectedOperatorId
+    setSelectedPropertyValue
 }) => {
     const [error, setError] = useState<string | null>(null);
     const propertyValues = getPropertyValues();
+    const { selectedOperatorId, selectedPropertyValue } = filter
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
         const value = event.target.value;

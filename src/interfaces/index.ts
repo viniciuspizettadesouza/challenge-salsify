@@ -27,4 +27,10 @@ export interface Datastore {
     products: Product[];
     properties: Property[];
     operators: Operator[];
-}  
+}
+
+export interface Filter {
+    selectedPropertyId: number | null;
+    selectedOperatorId: string | null;
+    selectedPropertyValue: string | null;
+}
