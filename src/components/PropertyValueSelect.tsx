@@ -27,7 +27,7 @@ const PropertyValueSelect: React.FC<PropertyValueSelectProps> = ({
     };
 
     return (
-        <div>
+        <>
             {(selectedOperatorId === 'contains' || selectedOperatorId === 'in') ? (
                 <div>
                     <input
@@ -48,7 +48,7 @@ const PropertyValueSelect: React.FC<PropertyValueSelectProps> = ({
                     ))}
                 </select>
             )}
-        </div>
+        </>
     );
 };
 
