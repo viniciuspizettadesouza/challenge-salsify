@@ -31,17 +31,23 @@ const PropertyValueSelect: React.FC<PropertyValueSelectProps> = ({
   return (
     <>
       {selectedOperatorId === "contains" || selectedOperatorId === "in" ? (
-        <div>
+        <>
           <input
             type="text"
+            className="p-2 rounded border border-gray-300"
             value={selectedPropertyValue || ""}
             onChange={handleChange}
             placeholder="Enter value(s) to filter"
           />
           {error && <p style={{ color: "red" }}>{error}</p>}
-        </div>
+        </>
       ) : (
-        <select value={selectedPropertyValue || ""} onChange={handleChange} aria-label="Property Value Select">
+        <select
+          className="p-2 rounded border border-gray-300"
+          value={selectedPropertyValue || ""}
+          onChange={handleChange}
+          aria-label="Property Value Select"
+        >
           <option value="">Select a value</option>
           {propertyValues.map((value) => (
             <option key={value} value={value}>

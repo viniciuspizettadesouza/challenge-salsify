@@ -28,7 +28,12 @@ const OperatorSelect: React.FC<OperatorSelectProps> = ({
   };
 
   return (
-    <select value={selectedOperatorId || ""} onChange={handleChange} aria-label="Operator Select">
+    <select
+      className="p-2 rounded border border-gray-300"
+      value={selectedOperatorId || ""}
+      onChange={handleChange}
+      aria-label="Operator Select"
+    >
       <option value="">Select Operator</option>
       {renderOperatorOptions()}
     </select>

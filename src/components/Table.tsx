@@ -104,38 +104,54 @@ const Table: React.FC = () => {
   });
 
   return (
-    <div>
-      <PropertySelect
-        filter={filter}
-        properties={properties}
-        handlePropertyChange={handlePropertyChange}
-      />
-      <OperatorSelect
-        filter={filter}
-        operators={operators}
-        setSelectedOperatorId={handleOperatorChange}
-      />
-      {filter.selectedPropertyId !== null && (
-        <PropertyValueSelect
-          filter={filter}
-          getPropertyValues={getPropertyValues}
-          setSelectedPropertyValue={handlePropertyValueChange}
-        />
-      )}
-      <button onClick={handleClear}>Clear</button>
+    <div className="container mx-auto py-6">
+      <h1 className="text-2xl font-bold mb-6">Salsify Product Table</h1>
+
+      <div className="flex justify-between">
+        <div className="flex items-center space-x-4 mb-4">
+          <PropertySelect
+            filter={filter}
+            properties={properties}
+            handlePropertyChange={handlePropertyChange}
+          />
+          <OperatorSelect
+            filter={filter}
+            operators={operators}
+            setSelectedOperatorId={handleOperatorChange}
+          />
+          {filter.selectedPropertyId !== null && (
+            <PropertyValueSelect
+              filter={filter}
+              getPropertyValues={getPropertyValues}
+              setSelectedPropertyValue={handlePropertyValueChange}
+            />
+          )}
+        </div>
+        <div>
+          <button
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            onClick={handleClear}
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+
       {filteredProducts.length > 0 ? (
-        <table>
-          <thead>
-            <TableHeader properties={properties} />
-          </thead>
-          <tbody>
-            {filteredProducts.map((product) => (
-              <tr key={product.id}>
-                <TableCell product={product} properties={properties} />
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <TableHeader properties={properties} />
+            </thead>
+            <tbody>
+              {filteredProducts.map((product) => (
+                <tr key={product.id}>
+                  <TableCell product={product} properties={properties} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         <p>No products available.</p>
       )}

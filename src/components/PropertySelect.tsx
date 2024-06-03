@@ -23,6 +23,7 @@ const PropertySelect: React.FC<PropertySelectProps> = ({
 
   return (
     <select
+      className="p-2 rounded border border-gray-300"
       value={selectedPropertyId !== null ? selectedPropertyId : ""}
       onChange={(e) => handlePropertyChange(parseInt(e.target.value))}
       aria-label="Property Select"

@@ -5,9 +5,11 @@ interface TableHeaderProps {
 }
 
 const TableHeader: React.FC<TableHeaderProps> = ({ properties }) => (
-  <tr>
+  <tr className="bg-gray-200">
     {properties.map((property) => (
-      <th key={property.id}>{property.name}</th>
+      <th className="text-left" key={property.id}>
+        {property.name}
+      </th>
     ))}
   </tr>
 );
