@@ -23,6 +23,12 @@ const Table: React.FC = () => {
         setSelectedPropertyValue(null);
     };
 
+    const handleClear = () => {
+        setSelectedPropertyId(null);
+        setSelectedOperatorId(null);
+        setSelectedPropertyValue(null);
+    };
+
     const getPropertyValues = () => {
         if (selectedPropertyId === null) return [];
         const selectedProperty = properties.find(property => property.id === selectedPropertyId);
@@ -93,6 +99,7 @@ const Table: React.FC = () => {
                 />
             )}
 
+            <button onClick={handleClear}>Clear</button>
 
             {filteredProducts.length > 0 ? (
                 <table>
