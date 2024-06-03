@@ -7,33 +7,42 @@ import PropertyValueSelect from './PropertyValueSelect';
 import datastore from '../datastore';
 import { Product, Property, Operator } from '../interfaces';
 
+interface Filter {
+    selectedPropertyId: number | null;
+    selectedOperatorId: string | null;
+    selectedPropertyValue: string | null;
+}
+
 const Table: React.FC = () => {
-    const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
-    const [selectedOperatorId, setSelectedOperatorId] = useState<string | null>(null);
-    const [selectedPropertyValue, setSelectedPropertyValue] = useState<string | null>(null);
+    const [filter, setFilter] = useState<Filter>({
+        selectedPropertyId: null,
+        selectedOperatorId: null,
+        selectedPropertyValue: null
+    });
 
     const products: Product[] = datastore.getProducts();
     const properties: Property[] = datastore.getProperties();
     const operators: Operator[] = datastore.getOperators();
 
-    const handlePropertyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = event.target.value;
-        setSelectedPropertyId(value !== '' ? parseInt(value) : null);
-        setSelectedOperatorId(null);
-        setSelectedPropertyValue(null);
+    const handlePropertyChange = (selectedPropertyId: number | null) => {
+        setFilter({ ...filter, selectedPropertyId, selectedOperatorId: null, selectedPropertyValue: null });
+    };
+
+    const handleOperatorChange = (selectedOperatorId: string | null) => {
+        setFilter({ ...filter, selectedOperatorId, selectedPropertyValue: null });
+    };
+
+    const handlePropertyValueChange = (selectedPropertyValue: string | null) => {
+        setFilter({ ...filter, selectedPropertyValue });
     };
 
     const handleClear = () => {
-        setSelectedPropertyId(null);
-        setSelectedOperatorId(null);
-        setSelectedPropertyValue(null);
+        setFilter({ selectedPropertyId: null, selectedOperatorId: null, selectedPropertyValue: null });
     };
 
-    const getPropertyValues = () => {
-        if (selectedPropertyId === null) return [];
-        const selectedProperty = properties.find(property => property.id === selectedPropertyId);
+    const getPropertyValues = (): string[] => {
+        const selectedProperty = properties.find(property => property.id === filter.selectedPropertyId);
         if (!selectedProperty) return [];
-
         const values = new Set<string>();
         products.forEach(product => {
             product.property_values.forEach(pv => {
@@ -42,36 +51,31 @@ const Table: React.FC = () => {
                 }
             });
         });
-
         return Array.from(values);
     };
 
     const filteredProducts = products.filter(product => {
-        if (selectedPropertyId === null || selectedOperatorId === null || (selectedPropertyValue === null && selectedOperatorId !== 'any' && selectedOperatorId !== 'none')) return true;
-
-        const selectedProperty = properties.find(property => property.id === selectedPropertyId);
-        const selectedOperator = operators.find(operator => operator.id === selectedOperatorId);
-
+        const selectedProperty = properties.find(property => property.id === filter.selectedPropertyId);
+        const selectedOperator = operators.find(operator => operator.id === filter.selectedOperatorId);
         if (!selectedProperty || !selectedOperator) return true;
-
-        const propertyValue = product.property_values.find(pv => pv.property_id === selectedPropertyId)?.value;
-        if (propertyValue === undefined || propertyValue === null || selectedPropertyValue === null) return false;
-
-        switch (selectedOperator.id) {
+        const propertyValue = product.property_values.find(pv => pv.property_id === filter.selectedPropertyId)?.value;
+        switch (filter.selectedOperatorId) {
             case 'equals':
-                return propertyValue.toString() === selectedPropertyValue;
+                return propertyValue?.toString() === filter.selectedPropertyValue;
             case 'greater_than':
-                return parseFloat(propertyValue.toString()) > parseFloat(selectedPropertyValue);
+                return parseFloat(propertyValue?.toString() || '') > parseFloat(filter.selectedPropertyValue || '');
             case 'less_than':
-                return parseFloat(propertyValue.toString()) < parseFloat(selectedPropertyValue);
+                return parseFloat(propertyValue?.toString() || '') < parseFloat(filter.selectedPropertyValue || '');
             case 'any':
                 return propertyValue !== undefined && propertyValue !== null;
             case 'none':
                 return propertyValue === undefined || propertyValue === null;
-            case 'in':
-                return selectedPropertyValue.split(',').includes(propertyValue.toString());
+            case 'in': {
+                const values = filter.selectedPropertyValue?.split(',').map(val => val.trim()) || [];
+                return values.includes(propertyValue?.toString() || '');
+            }
             case 'contains':
-                return propertyValue.toString().includes(selectedPropertyValue);
+                return propertyValue?.toString().toLowerCase().includes(filter.selectedPropertyValue?.toLowerCase() || '');
             default:
                 return true;
         }
@@ -80,27 +84,24 @@ const Table: React.FC = () => {
     return (
         <div>
             <PropertySelect
-                selectedPropertyId={selectedPropertyId}
+                selectedPropertyId={filter.selectedPropertyId}
                 properties={properties}
                 handlePropertyChange={handlePropertyChange}
             />
-
             <OperatorSelect
-                selectedOperatorId={selectedOperatorId}
+                selectedOperatorId={filter.selectedOperatorId}
                 operators={operators}
-                setSelectedOperatorId={setSelectedOperatorId}
+                setSelectedOperatorId={handleOperatorChange}
             />
-
-            {selectedPropertyId !== null && (
+            {filter.selectedPropertyId !== null && (
                 <PropertyValueSelect
-                    selectedPropertyValue={selectedPropertyValue}
+                    selectedPropertyValue={filter.selectedPropertyValue}
                     getPropertyValues={getPropertyValues}
-                    setSelectedPropertyValue={setSelectedPropertyValue}
+                    setSelectedPropertyValue={handlePropertyValueChange}
+                    selectedOperatorId={filter.selectedOperatorId}
                 />
             )}
-
             <button onClick={handleClear}>Clear</button>
-
             {filteredProducts.length > 0 ? (
                 <table>
                     <thead><TableHeader properties={properties} /></thead>

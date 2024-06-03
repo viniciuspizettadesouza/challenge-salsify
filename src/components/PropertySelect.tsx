@@ -3,7 +3,7 @@ import { Property } from '../interfaces';
 interface PropertySelectProps {
     selectedPropertyId: number | null;
     properties: Property[];
-    handlePropertyChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+    handlePropertyChange: (selectedPropertyId: number | null) => void;
 }
 
 const PropertySelect: React.FC<PropertySelectProps> = ({ selectedPropertyId, properties, handlePropertyChange }) => {
@@ -16,7 +16,7 @@ const PropertySelect: React.FC<PropertySelectProps> = ({ selectedPropertyId, pro
     };
 
     return (
-        <select value={selectedPropertyId !== null ? selectedPropertyId : ''} onChange={handlePropertyChange}>
+        <select value={selectedPropertyId !== null ? selectedPropertyId : ''} onChange={(e) => handlePropertyChange(parseInt(e.target.value))}>
             <option value="">Select Property</option>
             {renderPropertyOptions()}
         </select>

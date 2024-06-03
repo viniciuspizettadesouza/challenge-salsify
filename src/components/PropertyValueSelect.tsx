@@ -1,24 +1,54 @@
+import { useState } from 'react';
+
 interface PropertyValueSelectProps {
     selectedPropertyValue: string | null;
     getPropertyValues: () => string[];
-    setSelectedPropertyValue: React.Dispatch<React.SetStateAction<string | null>>;
+    setSelectedPropertyValue: (value: string | null) => void;
+    selectedOperatorId: string | null;
 }
 
 const PropertyValueSelect: React.FC<PropertyValueSelectProps> = ({
     selectedPropertyValue,
     getPropertyValues,
     setSelectedPropertyValue,
+    selectedOperatorId
 }) => {
+    const [error, setError] = useState<string | null>(null);
+    const propertyValues = getPropertyValues();
+
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+        const value = event.target.value;
+        if (selectedOperatorId === 'contains' && value.split(' ').length > 1) {
+            setError('Please enter a single item without spaces.');
+        } else {
+            setError(null);
+            setSelectedPropertyValue(value !== '' ? value : null);
+        }
+    };
+
     return (
-        <select value={selectedPropertyValue !== null ? selectedPropertyValue : ''}
-            onChange={(event) => setSelectedPropertyValue(event.target.value)}>
-            <option value="">Select Value</option>
-            {getPropertyValues().map(value => (
-                <option key={value} value={value}>
-                    {value}
-                </option>
-            ))}
-        </select>
+        <div>
+            {(selectedOperatorId === 'contains' || selectedOperatorId === 'in') ? (
+                <div>
+                    <input
+                        type="text"
+                        value={selectedPropertyValue || ''}
+                        onChange={handleChange}
+                        placeholder="Enter value(s) to filter"
+                    />
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                </div>
+            ) : (
+                <select value={selectedPropertyValue || ''} onChange={handleChange}>
+                    <option value="">Select a value</option>
+                    {propertyValues.map(value => (
+                        <option key={value} value={value}>
+                            {value}
+                        </option>
+                    ))}
+                </select>
+            )}
+        </div>
     );
 };
 

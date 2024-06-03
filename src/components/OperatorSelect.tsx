@@ -3,7 +3,7 @@ import { Operator } from '../interfaces';
 interface OperatorSelectProps {
     selectedOperatorId: string | null;
     operators: Operator[];
-    setSelectedOperatorId: React.Dispatch<React.SetStateAction<string | null>>;
+    setSelectedOperatorId: (value: string | null) => void;
 }
 
 const OperatorSelect: React.FC<OperatorSelectProps> = ({ selectedOperatorId, operators, setSelectedOperatorId }) => {
@@ -15,8 +15,12 @@ const OperatorSelect: React.FC<OperatorSelectProps> = ({ selectedOperatorId, ope
         ));
     };
 
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedOperatorId(event.target.value !== '' ? event.target.value : null);
+    };
+
     return (
-        <select value={selectedOperatorId ?? ''} onChange={(event) => setSelectedOperatorId(event.target.value)}>
+        <select value={selectedOperatorId || ''} onChange={handleChange}>
             <option value="">Select Operator</option>
             {renderOperatorOptions()}
         </select>
